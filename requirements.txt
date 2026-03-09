@@ -1,0 +1,12 @@
+Flask
+pandas
+yfinance
+numpy
+scikit-learn
+xgboost
+vaderSentiment
+matplotlib
+feedparser
+gunicorn
+curl-cffi
+yahooquery
