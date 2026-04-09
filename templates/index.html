@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StockSage | Dynamic Trading Intelligence</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <div class="glass-bg"></div>
+
+    <header>
+        <div class="logo">
+            <h1>Stock<span class="highlight">Sage</span></h1>
+            <p></p>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Controls Panel -->
+        <section class="panel glass-panel controls-panel">
+            <h2>Market Explorer</h2>
+            <div class="input-group">
+                <label>Search Stock</label>
+                <div class="search-wrapper">
+                    <input type="text" id="stockSearch" placeholder="e.g. Apple or AAPL..." autocomplete="off">
+                    <ul id="searchResults" class="dropdown"></ul>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Selected Ticker</label>
+                <input type="text" id="selectedTicker" readonly value="AAPL" class="readonly-input">
+            </div>
+
+            <div class="input-group">
+                <label>Timeframe</label>
+                <select id="timePeriod">
+                    <option value="1mo">1 Month</option>
+                    <option value="3mo">3 Months</option>
+                    <option value="6mo">6 Months</option>
+                    <option value="1y" selected>1 Year</option>
+                    <option value="5y">5 Years</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>Graph Interval</label>
+                <select id="graphInterval">
+                    <option value="1d">Daily</option>
+                    <option value="1wk">Weekly</option>
+                    <option value="1mo" selected>Monthly</option>
+                </select>
+            </div>
+
+            <button class="btn primary-btn" id="analyzeBtn">Analyze Stock</button>
+            <div id="loadingIndicator" class="loading hidden">Processing AI Models...</div>
+        </section>
+
+        <!-- Dashboard Area -->
+        <section class="dashboard hidden" id="dashboard">
+            <div class="chart-grid">
+                <!-- Main Stock Price Line Chart -->
+                <div class="panel glass-panel main-chart">
+                    <h3>Price Trend</h3>
+                    <div style="position: relative; height: 350px;">
+                        <canvas id="priceChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Probabilities Bar Chart -->
+                <div class="panel glass-panel features-chart">
+                    <h3>AI Predictors</h3>
+                    <div style="position: relative; height: 200px;">
+                        <canvas id="probChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Sentiment Pie Chart -->
+                <div class="panel glass-panel sentiment-chart">
+                    <h3>News Sentiment</h3>
+                    <div style="position: relative; height: 200px;">
+                        <canvas id="sentimentChart"></canvas>
+                    </div>
+                    <div id="newsFeed" class="news-feed"></div>
+                </div>
+
+                <!-- Financials Checklist -->
+                <div class="panel glass-panel financials-panel">
+                    <h3>Financial Health</h3>
+                    <ul id="financialsList" class="fin-list">
+                        <!-- Populated by JS -->
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dynamic Tools Row -->
+        <div class="tools-grid hidden" id="toolsGrid">
+            <!-- Pattern Matcher Drawing Panel -->
+            <section class="panel glass-panel pattern-panel">
+                <h2>Drawing & Pattern Matching</h2>
+                <p class="subtext">Draw multiple connected lines to create a path, save it, and we'll compare all your
+                    saved paths to the stock's trend!</p>
+
+                <div class="canvas-container">
+                    <canvas id="drawingCanvas" width="400" height="200"></canvas>
+                </div>
+
+                <div class="pattern-controls">
+                    <button class="btn secondary-btn" id="clearCanvasBtn">Clear</button>
+                    <input type="text" id="patternComment" placeholder="Pattern name...">
+                    <button class="btn primary-btn" id="savePatternBtn">Save Pattern</button>
+                </div>
+
+                <div style="margin-top: 15px;">
+                    <h3>Saved Patterns</h3>
+                    <ul id="savedPatternsList" class="fin-list"
+                        style="margin-bottom:10px; max-height:100px; overflow-y:auto; font-size:0.9rem;"></ul>
+                    <button class="btn primary-btn" id="matchPatternBtn" style="width:100%;">Match Stock vs Saved
+                        Patterns</button>
+                </div>
+
+                <div id="patternResult" class="pattern-result hidden"></div>
+            </section>
+
+            <!-- Profit Estimator -->
+            <section class="panel glass-panel profit-panel">
+                <h2>Profit Estimator</h2>
+
+                <div class="input-group">
+                    <label>Principal Amount (₹/$)</label>
+                    <input type="number" id="principalAmount" placeholder="10000" value="10000">
+                </div>
+                <div class="input-group">
+                    <label>Current Buying Price</label>
+                    <input type="number" id="buyPrice" readonly class="readonly-input">
+                </div>
+                <div class="input-group">
+                    <label>Expected Selling Price</label>
+                    <input type="number" id="sellPrice" placeholder="Enter target">
+                </div>
+                <div class="input-group">
+                    <label>Tax Rate (%)</label>
+                    <input type="number" id="taxRate" value="15" step="0.1">
+                </div>
+
+                <button class="btn primary-btn" style="width: 100%; margin-top: 10px;" id="calcProfitBtn">Estimate
+                    Profit</button>
+
+                <div id="profitResult" class="profit-result hidden">
+                    <div class="stat"><span class="label">Gross Profit:</span> <span id="grossRes"
+                            class="val positive">0.00</span></div>
+                    <div class="stat"><span class="label">Taxes:</span> <span id="taxRes"
+                            class="val negative">0.00</span></div>
+                    <div class="stat"><span class="label">Net Profit:</span> <span id="netRes"
+                            class="val positive bold">0.00</span></div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+
+</html>
