@@ -40,6 +40,26 @@ The application is built on a **Flask** backend with a modern, responsive **glas
 
 ---
 
+## 🏗️ System Architecture
+
+```mermaid
+graph TD
+    Client((Web Client)) -->|HTTP GET/POST| Flask[Flask Backend API]
+    
+    subgraph Data Sources
+        Flask -->|REST/RSS| Yahoo[Yahoo Finance API]
+    end
+    
+    subgraph Machine Learning Pipeline
+        Flask --> RF[Random Forest]
+        Flask --> XGB[XGBoost]
+        Flask --> VADER[VADER NLP Sentiment]
+        Flask --> ACO[Ant Colony Optimization]
+    end
+```
+
+---
+
 ## 📖 How to Use the Software
 
 1. **Market Explorer:** Start by typing a stock symbol (e.g., AAPL for Apple) into the search bar. Select the desired timeframe and interval, then click **Analyze Stock**.

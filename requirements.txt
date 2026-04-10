@@ -10,3 +10,4 @@ feedparser
 gunicorn
 curl-cffi
 yahooquery
+pytest==8.1.1
